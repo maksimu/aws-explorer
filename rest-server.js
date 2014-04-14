@@ -14,12 +14,13 @@ var argv = require('optimist')
 
 var app = express();
 
-console.log("Access Key: ***** [" + argv.a.length + " letters]\nSecret Access Key: ***** [" + argv.s.length +" letters]\nRegion:[" + argv.r +"]\nPort:[" + argv.p +"]" )
+console.log("Access Key: ***** [" + argv.a.length + " letters]\nSecret Access Key: ***** [" + argv.s.length + " letters]\nRegion:[" + argv.r + "]\nPort:[" + argv.p + "]")
 
 AWS.config.update({accessKeyId: argv.a, secretAccessKey: argv.s});
 AWS.config.update({region: argv.r});
 
 var elasticbeanstalk = new AWS.ElasticBeanstalk();
+var ec2 = new AWS.EC2();
 
 /**
  * Enable CORS
@@ -86,7 +87,7 @@ app.get('/', function (req, res) {
                     console.log("---- describing Environment [" + environment.EnvironmentId + "]");
                     if (err) {
                         console.log(err, err.stack); // an error occurred
-                        callback("Error");
+                        callback(err);
                     } else {
 //                        console.log(resourceData);
 
@@ -104,6 +105,7 @@ app.get('/', function (req, res) {
                 // if any of the file processing produced an error, err would equal that error
                 if (err) {
                     console.log('Problem');
+                    callback(err);
                 } else {
                     console.log('All is well');
                     callback();
@@ -124,6 +126,26 @@ app.get('/', function (req, res) {
             res.send(environmentsData);
         }
     });
+});
+
+
+app.get('/instance/:instanceId', function (req, res) {
+
+    var instanceId = req.params.instanceId;
+
+    var params = {
+        InstanceIds: [instanceId]
+    };
+
+    ec2.describeInstances(params, function (err, instanceRawData) {
+        if (err) {
+            console.log(err, err.stack);
+        }
+        else {
+            res.send(instanceRawData);
+        }
+    });
+
 });
 
 

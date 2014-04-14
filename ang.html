@@ -3,49 +3,90 @@
 <head>
     <title>Hello AngularJS</title>
     <link href="style.css" rel="stylesheet" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.5/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.5/angular-animate.js"></script>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/superhero/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <script src="hello.js"></script>
 </head>
 
 <body>
 
-<div ng-controller="Hello">
 
-
-    <ul>
-        <li ng-repeat="e in environments">
-            <h1>{{e.environment.ApplicationName}}</h1>
-
-            <div>{{e.environment.CNAME}}</div>
-            <div>Health: {{e.environment.Health}}</div>
-            <div>{{e.environment.SolutionStackName}}</div>
-            <ul>
-                <li ng-repeat="inst in e.resources.EnvironmentResources.Instances">
-                    <div>{{inst.Id}}</div>
-                </li>
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <span class="navbar-brand" href="#">Assignment 2 <small>{{libraryName}}</small></span>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <!--<li><a href="websockets" target="_blank">Web Sockets <span class="label label-success">Extra</span></a></li>-->
             </ul>
-
-        </li>
-
-    </ul>
+        </div>
+        <!--/.nav-collapse -->
+    </div>
 </div>
 
-<!--<div ng-controller="Hello">-->
-<!--Total number {{placetypes.size}}-->
-<!--<input ng-model="query">-->
+
+<div class="container" style="padding:40px 15px;" ng-controller="Hello">
 
 
-<!--<ul>-->
-<!--<li ng-repeat="p in placetypes | filter:query | orderBy:pt">-->
-<!-- {{p}}-->
-<!--</li>-->
-<!--</ul>-->
+    Search: <input ng-model="query">
 
-<!--&lt;!&ndash;<p>The ID is {{greeting.id}}</p>&ndash;&gt;-->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
 
-<!--&lt;!&ndash;<p>The content is {{greeting.content}}</p>&ndash;&gt;-->
-<!--</div>-->
+
+                <div ng-repeat="e in environments | filter:query">
+                    <div class="col-md-3" style="height: 100%;">
+                        <div class="panel panel-default">
+                            <!-- Default panel contents -->
+                            <h6 class="panel-heading">{{e.environment.ApplicationName}}</h6>
+                            <h6>{{e.environment.CNAME}}</h6>
+                            <h6>Health: {{e.environment.Health}}</h6>
+                            <h6>{{e.environment.SolutionStackName}}</h6>
+                            <ul>
+                                <li ng-repeat="inst in e.resources.EnvironmentResources.Instances">
+                                    <div ng-click="getEC2InstInfo(inst.Id)">{{inst.Id}}</div>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+            <div ng-repeat="i in instInfo.Reservations[0].Instances">
+                <h6>ssh -i ~/.ssh/{{i.KeyName}} ec2-user@{{i.PublicDnsName}}</h6>
+            </div>
+            <!--{{instInfo}}-->
+        </div>
+    </div>
+
+
+</div>
+
+
+</div>
+
+<!-- script tags -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="//code.jquery.com/jquery.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+
