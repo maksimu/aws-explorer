@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" ng-app>
+<head>
+    <title>Hello AngularJS</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.5/angular-animate.js"></script>
+    <script src="hello.js"></script>
+</head>
+
+<body>
+
+<div ng-controller="Hello">
+
+
+    <ul>
+        <li ng-repeat="e in environments">
+            <h1>{{e.environment.ApplicationName}}</h1>
+
+            <div>{{e.environment.CNAME}}</div>
+            <div>Health: {{e.environment.Health}}</div>
+            <div>{{e.environment.SolutionStackName}}</div>
+            <ul>
+                <li ng-repeat="inst in e.resources.EnvironmentResources.Instances">
+                    <div>{{inst.Id}}</div>
+                </li>
+            </ul>
+
+        </li>
+
+    </ul>
+</div>
+
+<!--<div ng-controller="Hello">-->
+<!--Total number {{placetypes.size}}-->
+<!--<input ng-model="query">-->
+
+
+<!--<ul>-->
+<!--<li ng-repeat="p in placetypes | filter:query | orderBy:pt">-->
+<!-- {{p}}-->
+<!--</li>-->
+<!--</ul>-->
+
+<!--&lt;!&ndash;<p>The ID is {{greeting.id}}</p>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<p>The content is {{greeting.content}}</p>&ndash;&gt;-->
+<!--</div>-->
+</body>
+</html>
