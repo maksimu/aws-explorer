@@ -2,19 +2,21 @@ var express = require('express');
 var AWS = require('aws-sdk');
 var async = require('async');
 var argv = require('optimist')
-    .usage('Usage: $0 -a [num] -s [num] -r [str] -p')
+    .usage('Usage: $0 -a [num] -s [num] -r [str] -p [num] -sp [num]')
     .demand(['a', 's'])
     .default('r', 'us-east-1')
+    .default('sp', 8888)
     .default('p', 9999)
     .describe('a', 'AWS Access Key (Required)')
     .describe('s', 'AWS Secret Access Key (Required)')
     .describe('r', 'AWS Region. Default. (Not Required, default "us-east-1"')
     .describe('p', 'Port of the REST server. (Not Required, default "9999"')
+    .describe('sp', 'Port of the Static files server. (Not Required, default "8888"')
     .argv;
 
 var app = express();
 
-console.log("Access Key: ***** [" + argv.a.length + " letters]\nSecret Access Key: ***** [" + argv.s.length + " letters]\nRegion:[" + argv.r + "]\nPort:[" + argv.p + "]")
+console.log("Access Key: ***** [" + argv.a.length + " letters]\nSecret Access Key: ***** [" + argv.s.length + " letters]\nRegion:[" + argv.r + "]\nWeb Service Port:[" + argv.p + "]\nStatic Server Port:[" + argv.sp + "]\n\n\n")
 
 AWS.config.update({accessKeyId: argv.a, secretAccessKey: argv.s});
 AWS.config.update({region: argv.r});
@@ -129,6 +131,9 @@ app.get('/', function (req, res) {
 });
 
 
+/**
+ * Return EC2 Instance information
+ */
 app.get('/instance/:instanceId', function (req, res) {
 
     var instanceId = req.params.instanceId;
@@ -150,3 +155,16 @@ app.get('/instance/:instanceId', function (req, res) {
 
 
 app.listen(process.env.PORT || argv.p);
+
+
+
+
+/**
+ * -----------------------
+ * Start Static Web Server
+ * -----------------------
+ */
+var connect = require('connect');
+console.log("Starting ...");
+connect.createServer(connect.static(__dirname)).listen(argv.sp);
+console.log("Started static web site on port: " + argv.sp);
